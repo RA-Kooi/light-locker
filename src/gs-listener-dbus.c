@@ -150,6 +150,7 @@ gs_listener_send_switch_greeter (GSListener *listener)
                 return;
         }
 
+		gs_debug ("SwitchToGreeter");
         message = dbus_message_new_method_call (DM_SERVICE,
                                                 listener->priv->seat_path,
                                                 DM_SEAT_INTERFACE,
@@ -191,6 +192,7 @@ gs_listener_send_lock_session (GSListener *listener)
                 return;
         }
 
+		gs_debug ("Lock");
         message = dbus_message_new_method_call (DM_SERVICE,
                                                 DM_SESSION_PATH,
                                                 DM_SESSION_INTERFACE,
@@ -368,6 +370,7 @@ gs_listener_set_idle_hint (GSListener *listener, gboolean idle)
                         return;
                 }
 
+				gs_debug ("SetIdleHint");
                 message = dbus_message_new_method_call (SYSTEMD_LOGIND_SERVICE,
                                                         listener->priv->session_id,
                                                         SYSTEMD_LOGIND_SESSION_INTERFACE,
@@ -420,6 +423,7 @@ gs_listener_delay_suspend (GSListener *listener)
 
         dbus_error_init (&error);
 
+		gs_debug ("Inhibit");
         message = dbus_message_new_method_call (SYSTEMD_LOGIND_SERVICE, SYSTEMD_LOGIND_PATH, SYSTEMD_LOGIND_INTERFACE, "Inhibit");
         if (message == NULL) {
                 gs_debug ("Couldn't allocate the dbus message");
@@ -1097,6 +1101,7 @@ query_session_active (GSListener *listener)
 
         dbus_error_init (&error);
 
+		gs_debug("logind Get");
         message = dbus_message_new_method_call (SYSTEMD_LOGIND_SERVICE, listener->priv->session_id, DBUS_PROPERTIES_INTERFACE, "Get");
         if (message == NULL) {
                 gs_debug ("Couldn't allocate the dbus message");
@@ -1165,6 +1170,7 @@ query_lid_closed (GSListener *listener)
 
         dbus_error_init (&error);
 
+		gs_debug("UPower Get");
         message = dbus_message_new_method_call (UP_SERVICE, UP_PATH, DBUS_PROPERTIES_INTERFACE, "Get");
         if (message == NULL) {
                 gs_debug ("Couldn't allocate the dbus message");
@@ -1949,6 +1955,7 @@ query_session_id (GSListener *listener)
         if (listener->priv->have_systemd) {
                 dbus_uint32_t pid = getpid();
 
+				gs_debug("GetSessionByPID");
                 message = dbus_message_new_method_call (SYSTEMD_LOGIND_SERVICE, SYSTEMD_LOGIND_PATH, SYSTEMD_LOGIND_INTERFACE, "GetSessionByPID");
                 if (message == NULL) {
                         gs_debug ("Couldn't allocate the dbus message");
@@ -2104,6 +2111,7 @@ find_graphical_session (GSListener *listener)
     {
         dbus_error_init(&error); /* FIXME: potential leak? */
 
+		gs_debug("GetSession");
         message = dbus_message_new_method_call (
             SYSTEMD_LOGIND_SERVICE,
             SYSTEMD_LOGIND_PATH,
@@ -2243,6 +2251,7 @@ query_seat_path (GSListener *listener)
 
         dbus_error_init (&error);
 
+		gs_debug("DM Get");
         message = dbus_message_new_method_call (DM_SERVICE, DM_SESSION_PATH, DBUS_PROPERTIES_INTERFACE, "Get");
         if (message == NULL) {
                 gs_debug ("Couldn't allocate the dbus message");
